@@ -1,0 +1,22 @@
+.navbar {
+    padding: 10px;
+    background-color: #282c34;
+}
+
+.navList {
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+.navItem {
+    margin: 0 15px;
+}
+
+.navLink {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
