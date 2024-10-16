@@ -1,8 +1,22 @@
-import React from 'react';
+import React , {useState , useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../styles/HomePage.module.css';
+import axios from "axios"
+
 
 const HomePage = () => {
+  // console.log(process.env.REACT_APP_BASE_URL);
+  const fetchAPI = async() =>{
+    // const res = await axios.get(`${process.env.REACT_BASE_URL}/api/optimize`);
+    const res = await axios.get("http://127.0.0.1:8080/api/optimize")
+    console.log(res)
+
+
+  }
+  useEffect(()=>{
+   fetchAPI()
+  },[])
+
   return (
     <div className={styles.homeContainer}>
       <h1 className={styles.title}>Welcome to the Optimization Learning Platform</h1>
