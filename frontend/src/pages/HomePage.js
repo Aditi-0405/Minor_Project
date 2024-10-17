@@ -6,16 +6,16 @@ import axios from "axios"
 
 const HomePage = () => {
   // console.log(process.env.REACT_APP_BASE_URL);
-  const fetchAPI = async() =>{
-    // const res = await axios.get(`${process.env.REACT_BASE_URL}/api/optimize`);
-    const res = await axios.get("http://127.0.0.1:8080/api/optimize")
-    console.log(res)
+  // const fetchAPI = async() =>{
+  //   // const res = await axios.get(`${process.env.REACT_BASE_URL}/api/optimize`);
+  //   const res = await axios.get("http://127.0.0.1:8080/api/optimize")
+  //   console.log(res)
 
 
-  }
-  useEffect(()=>{
-   fetchAPI()
-  },[])
+  // }
+  // useEffect(()=>{
+  //  fetchAPI()
+  // },[])
 
   return (
     <div className={styles.homeContainer}>
