@@ -3,7 +3,8 @@ import axios from 'axios';
 import styles from '../styles/FunctionsPage.module.css';
 
 const FunctionsPage = () => {
-  const [optimizationType, setOptimizationType] = useState('');
+  const [optimizationType, setOptimizationType] = useState(''); 
+  const [optimizationMethod, setOptimizationMethod] = useState('');
   const [selectedFunction, setSelectedFunction] = useState('');
   const [optimizationResult, setOptimizationResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -11,7 +12,13 @@ const FunctionsPage = () => {
 
   const handleOptimizationTypeSelect = (event) => {
     setOptimizationType(event.target.value);
-    setSelectedFunction('');
+    setSelectedFunction(''); 
+    setOptimizationResult(null); 
+  };
+
+  const handleMethodSelect = (event) => {
+    setOptimizationMethod(event.target.value);
+    setSelectedFunction(''); 
     setOptimizationResult(null); 
   };
 
@@ -21,8 +28,8 @@ const FunctionsPage = () => {
   };
 
   const handleOptimize = async () => {
-    if (!selectedFunction) {
-      setError('Please select a function to optimize');
+    if (!selectedFunction || !optimizationMethod) {
+      setError('Please select a function and optimization method');
       return;
     }
 
@@ -30,7 +37,12 @@ const FunctionsPage = () => {
       setLoading(true);
       setError('');
 
-      const res = await axios.post(`http://127.0.0.1:8080/api/optimize?function=${selectedFunction}`);
+
+      const endpoint = optimizationMethod === 'gradient_descent'
+        ? 'http://127.0.0.1:8080/api/optimize/gradient_descent'
+        : 'http://127.0.0.1:8080/api/optimize/newton_raphson';
+
+      const res = await axios.post(`${endpoint}?function=${selectedFunction}`);
       console.log(res.data);
       setOptimizationResult(res.data);
     } catch (err) {
@@ -53,16 +65,26 @@ const FunctionsPage = () => {
 
       {optimizationType && (
         <>
-          <select onChange={handleFunctionSelect} value={selectedFunction} className={styles.functionSelect}>
-            <option value="">--Select a Function--</option>
-            <option value="cross_in_tray">Cross-in-Tray Function</option>
-            <option value="holder_table">Holder Table Function</option>
-            <option value="levy_n13">Levy Function N. 13</option>
+          <select onChange={handleMethodSelect} value={optimizationMethod} className={styles.methodSelect}>
+            <option value="">--Select Optimization Method--</option>
+            <option value="gradient_descent">Gradient Descent</option>
+            <option value="newton_raphson">Newton-Raphson</option>
           </select>
 
-          <button onClick={handleOptimize} className={styles.optimizeButton} disabled={loading}>
-            {loading ? 'Optimizing...' : 'Optimize'}
-          </button>
+          {optimizationMethod && (
+            <>
+              <select onChange={handleFunctionSelect} value={selectedFunction} className={styles.functionSelect}>
+                <option value="">--Select a Function--</option>
+                <option value="cross_in_tray">Cross-in-Tray Function</option>
+                <option value="holder_table">Holder Table Function</option>
+                <option value="levy_n13">Levy Function N. 13</option>
+              </select>
+
+              <button onClick={handleOptimize} className={styles.optimizeButton} disabled={loading}>
+                {loading ? 'Optimizing...' : 'Optimize'}
+              </button>
+            </>
+          )}
         </>
       )}
 

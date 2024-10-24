@@ -26,63 +26,107 @@ function_map = {
     'levy_n13': levy_function_n13
 }
 
-@app.route("/api/optimize", methods=['GET', 'POST'])
-def optimize():
+@app.route("/api/optimize/gradient_descent", methods=['GET', 'POST'])
+def optimize_gradient_descent():
+    return optimize('gradient_descent')
+
+@app.route("/api/optimize/newton_raphson", methods=['GET', 'POST'])
+def optimize_newton_raphson():
+    return optimize('newton_raphson')
+
+def optimize(method):
+
     function_name = request.args.get('function', default='cross_in_tray', type=str)
 
     if function_name not in function_map:
         return jsonify({'error': 'Function not found!'}), 400
 
-    x_1, x_2, η = smp.symbols('x_1 x_2 η', real=True)
+
+    x_1, x_2 = smp.symbols('x_1 x_2', real=True)
+
     f = function_map[function_name](x_1, x_2)
     dfdx_1 = smp.diff(f, x_1)
     dfdx_2 = smp.diff(f, x_2)
 
-    Choose_Algorithm = "steepest gradient descent"
-    iterations = 1
 
-    for i in range(iterations):
-        arr_fplot = np.array([])
-        arr_Aplot = np.array([])
-        arr_xplot = np.array([])
+    hessian = smp.Matrix([[smp.diff(dfdx_1, x_1), smp.diff(dfdx_1, x_2)],
+                           [smp.diff(dfdx_2, x_1), smp.diff(dfdx_2, x_2)]])
 
-        if Choose_Algorithm == "steepest gradient descent":
-            iteration = 0
-            Stop = 0.01
-            Amp_df = 0.1
+    iterations = 100 
+    results = []
+    current = np.array([[random.uniform(-10, 10), random.uniform(-10, 10)]])
 
-            previous = np.array([[random.uniform(-10, 10), random.uniform(-10, 10)]])
-            print("Initial Point equal", previous)
+    if method == 'gradient_descent':
 
-            while Amp_df > Stop:
-                iteration += 1
-                f_Value = float(f.subs({x_1: previous[0][0], x_2: previous[0][1]}))
+        iteration = 0
+        Stop = 0.01
+        Amp_df = 0.1
+        print("Initial Point equal", current)
 
-                dx_1 = float(dfdx_1.subs({x_1: previous[0][0], x_2: previous[0][1]}))
-                dx_2 = float(dfdx_2.subs({x_1: previous[0][0], x_2: previous[0][1]}))
+        while Amp_df > Stop and iteration < iterations:
+            iteration += 1
+            f_Value = float(f.subs({x_1: current[0][0], x_2: current[0][1]}))
 
-                g_df = np.array([[dx_1], [dx_2]])
-                Amp_df = np.linalg.norm(g_df)
+            dx_1 = float(dfdx_1.subs({x_1: current[0][0], x_2: current[0][1]}))
+            dx_2 = float(dfdx_2.subs({x_1: current[0][0], x_2: current[0][1]}))
 
-                if iteration == 1:
-                    η = 0.01
+            g_df = np.array([[dx_1], [dx_2]])
+            Amp_df = np.linalg.norm(g_df)
 
-                current = previous - (η * g_df.T)
+            η = 0.01
 
-                arr_fplot = np.append(arr_fplot, f_Value)
-                arr_Aplot = np.append(arr_Aplot, Amp_df)
-                arr_xplot = np.append(arr_xplot, previous[0])
-                previous = current
+            current = current - (η * g_df.T)
 
-                print(f"Iteration: {iteration}, Current Point: {current}, Function Value: {f_Value}, Gradient Magnitude: {Amp_df}")
+            results.append({
+                'iteration': iteration,
+                'current_point': current.tolist(),
+                'function_value': f_Value,
+                'gradient_magnitude': Amp_df
+            })
 
-    results = {
-        'final_point': current.tolist(),
-        'final_value': f_Value,
+            print(f"Iteration: {iteration}, Current Point: {current}, Function Value: {f_Value}, Gradient Magnitude: {Amp_df}")
+
+    elif method == 'newton_raphson':
+
+        iteration = 0
+        Stop = 0.01
+        print("Initial Point equal", current)
+
+        while iteration < iterations:
+            iteration += 1
+            f_Value = float(f.subs({x_1: current[0][0], x_2: current[0][1]}))
+
+            dx_1 = float(dfdx_1.subs({x_1: current[0][0], x_2: current[0][1]}))
+            dx_2 = float(dfdx_2.subs({x_1: current[0][0], x_2: current[0][1]}))
+            g_df = np.array([[dx_1], [dx_2]])
+
+            hessian_eval = hessian.subs({x_1: current[0][0], x_2: current[0][1]})
+            hessian_inv = hessian_eval.inv()
+
+            current = current - hessian_inv @ g_df
+
+            results.append({
+                'iteration': iteration,
+                'current_point': current.tolist(),
+                'function_value': f_Value
+            })
+
+            print(f"Iteration: {iteration}, Current Point: {current}, Function Value: {f_Value}")
+
+
+            if np.linalg.norm(current - g_df) < Stop:
+                break
+
+    final_value = float(f.subs({x_1: current[0][0], x_2: current[0][1]}))
+    final_point = current.tolist()
+
+    results_summary = {
+        'final_point': final_point,
+        'final_value': final_value,
         'iterations': iteration,
     }
 
-    return jsonify(results)
+    return jsonify(results_summary)
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
