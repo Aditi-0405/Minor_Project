@@ -2,6 +2,40 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import styles from '../styles/FunctionsPage.module.css';
 
+const soopFunctionDetails = {
+  'cross_in_tray': {
+    name: 'Cross-in-Tray Function',
+    equation: 'f(x_1, x_2) = -0.0001 * (|sin(x_1) * sin(x_2) * exp(|100 - sqrt(x_1^2 + x_2^2)| / π)| + 1)^0.1'
+  },
+  'holder_table': {
+    name: 'Holder Table Function',
+    equation: 'f(x_1, x_2) = -|sin(x_1) * cos(x_2) * exp(|1 - sqrt(x_1^2 + x_2^2)|)|'
+  },
+  'levy_n13': {
+    name: 'Levy Function N. 13',
+    equation: 'f(x_1, x_2) = sin^2(3πx_1) + (x_1 - 1)^2 * (1 + sin^2(3πx_2)) + (x_2 - 1)^2 * (1 + sin^2(2πx_2))'
+  }
+};
+
+const moopFunctionDetails = {
+  'zdt1': {
+    name: 'ZDT1 Problem',
+    equation: `f_1(x) = x_1, f_2(x) = g(x) * (1 - sqrt(x_1 / g(x))) where g(x) = 1 + 9 / (n - 1) * sum(x_i)`
+  },
+  'zdt2': {
+    name: 'ZDT2 Problem',
+    equation: `f_1(x) = x_1, f_2(x) = g(x) * (1 - (x_1 / g(x))^2) where g(x) = 1 + 9 / (n - 1) * sum(x_i)`
+  },
+  'zdt3': {
+    name: 'ZDT3 Problem',
+    equation: `f_1(x) = x_1, f_2(x) = g(x) * (1 - sqrt(x_1 / g(x)) - (x_1 / g(x)) * sin(10πx_1)) where g(x) = 1 + 9 / (n - 1) * sum(x_i)`
+  },
+  'zdt4': {
+    name: 'ZDT4 Problem',
+    equation: `f_1(x) = x_1, f_2(x) = g(x) * (1 - sqrt(x_1 / g(x))) where g(x) = 1 + 10 * (n - 1) + sum(x_i^2 - 10 * cos(4πx_i))`
+  }
+};
+
 const FunctionsPage = () => {
   const [optimizationType, setOptimizationType] = useState('');
   const [optimizationMethod, setOptimizationMethod] = useState('');
@@ -47,7 +81,6 @@ const FunctionsPage = () => {
             ? 'http://127.0.0.1:8080/api/optimize/gradient_descent'
             : 'http://127.0.0.1:8080/api/optimize/newton_raphson';
       } else if (optimizationType === 'moop') {
-
         endpoint = `http://127.0.0.1:8080/api/optimize/moop/${selectedFunction}`;
       }
 
@@ -98,20 +131,30 @@ const FunctionsPage = () => {
                 <option value="">--Select a Function--</option>
                 {optimizationType === 'soop' && (
                   <>
-                    <option value="cross_in_tray">Cross-in-Tray Function</option>
-                    <option value="holder_table">Holder Table Function</option>
-                    <option value="levy_n13">Levy Function N. 13</option>
+                    {Object.keys(soopFunctionDetails).map((key) => (
+                      <option value={key} key={key}>
+                        {soopFunctionDetails[key].name}
+                      </option>
+                    ))}
                   </>
                 )}
                 {optimizationType === 'moop' && (
                   <>
-                    <option value="zdt1">ZDT1 Problem</option>
-                    <option value="zdt2">ZDT2 Problem</option>
-                    <option value="zdt3">ZDT3 Problem</option>
-                    <option value="zdt4">ZDT4 Problem</option>
+                    {Object.keys(moopFunctionDetails).map((key) => (
+                      <option value={key} key={key}>
+                        {moopFunctionDetails[key].name}
+                      </option>
+                    ))}
                   </>
                 )}
               </select>
+
+              {selectedFunction && (
+                <div className={styles.functionDetails}>
+                  <h2>{optimizationType === 'soop' ? soopFunctionDetails[selectedFunction].name : moopFunctionDetails[selectedFunction].name}</h2>
+                  <p><strong>Equation:</strong> {optimizationType === 'soop' ? soopFunctionDetails[selectedFunction].equation : moopFunctionDetails[selectedFunction].equation}</p>
+                </div>
+              )}
 
               <button onClick={handleOptimize} className={styles.optimizeButton} disabled={loading}>
                 {loading ? 'Optimizing...' : 'Optimize'}
@@ -136,7 +179,6 @@ const FunctionsPage = () => {
                 ))}
               </p>
             )}
-
 
             {optimizationResult.final_value !== undefined && (
               <p><strong>Final Value:</strong> {optimizationResult.final_value}</p>
