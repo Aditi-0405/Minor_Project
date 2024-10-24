@@ -12,9 +12,9 @@ const FunctionsPage = () => {
 
   const handleOptimizationTypeSelect = (event) => {
     setOptimizationType(event.target.value);
-    setSelectedFunction(''); 
-    setSelectedMethod('');  
-    setOptimizationResult(null); 
+    setSelectedFunction('');
+    setSelectedMethod('');
+    setOptimizationResult(null);
   };
 
   const handleFunctionSelect = (event) => {
@@ -34,14 +34,17 @@ const FunctionsPage = () => {
     try {
       setLoading(true);
       setError('');
-      const res = await axios.get("http://127.0.0.1:8080/api/optimize", {
-        params: { 
-          optimizationType,
-          function: selectedFunction,
-          method: selectedMethod 
-        } 
-      });
-      console.log(res.data);  
+      const methodEndpoint = selectedMethod === 'method1'
+        ? 'gradient_descent'
+        : selectedMethod === 'method2'
+          ? 'newton_raphson'
+          : 'steepest_gradient_descent';
+
+      // const res = await axios.post(`http://127.0.0.1:8080/api/optimize/${methodEndpoint}`, {
+      //   function: selectedFunction,
+      // });
+      const res = await axios.post(`http://127.0.0.1:8080/api/optimize`);
+      console.log(res.data);
       setOptimizationResult(res.data);
     } catch (err) {
       setError('Failed to fetch optimization data');
@@ -114,7 +117,7 @@ const FunctionsPage = () => {
           <div className={styles.resultDetails}>
             <p><strong>Iterations:</strong> {optimizationResult.iterations}</p>
             <p><strong>Final Point:</strong> {optimizationResult.final_point.map((point, index) => (
-              <span key={index}>{point[0]}{index < optimizationResult.final_point.length - 1 ? ', ' : ''}</span>
+              <span key={index}>{point}{index < optimizationResult.final_point.length - 1 ? ', ' : ''}</span>
             ))}</p>
             <p><strong>Final Value:</strong> {optimizationResult.final_value}</p>
           </div>
