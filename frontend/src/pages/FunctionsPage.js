@@ -112,6 +112,9 @@ const FunctionsPage = () => {
                 <option value="">--Select Optimization Method--</option>
                 <option value="gradient_descent">Gradient Descent</option>
                 <option value="newton_raphson">Newton-Raphson</option>
+                <option value="steepest_gradient">Steepest Gradient Descent </option>
+                <option value="pso">Particle Swarm Optimization</option>
+                <option value="pso">Simulated Annealing</option>
               </select>
             </>
           )}
@@ -183,9 +186,9 @@ const FunctionsPage = () => {
             {optimizationResult.final_value !== undefined && (
               <p><strong>Final Value:</strong> {optimizationResult.final_value}</p>
             )}
-            {optimizationResult.iterations && (
+            {/* {optimizationResult.iterations && (
               <p><strong>Iterations:</strong> {optimizationResult.iterations}</p>
-            )}
+            )} */}
             {optimizationResult.pareto_front && (
               <p><strong>Pareto Front:</strong> {JSON.stringify(optimizationResult.pareto_front)}</p>
             )}

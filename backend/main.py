@@ -33,6 +33,18 @@ function_map = {
 def optimize_gradient_descent():
     return optimize('gradient_descent')
 
+@app.route("/api/optimize/steepest_gradient", methods=['POST'])
+def optimize_steepest_gradient():
+    return optimize('steepest_gradient')
+
+@app.route("/api/optimize/pso", methods=['POST'])
+def optimize_pso():
+    return optimize('pso')
+
+@app.route("/api/optimize/simulated_annealing", methods=['POST'])
+def optimize_simulated_annealing():
+    return optimize('simulated_annealing')
+
 @app.route("/api/optimize/newton_raphson", methods=['POST'])
 def optimize_newton_raphson():
     return optimize('newton_raphson')
@@ -51,11 +63,11 @@ def optimize(method):
 
     hessian = smp.Matrix([[smp.diff(dfdx_1, x_1), smp.diff(dfdx_1, x_2)],
                            [smp.diff(dfdx_2, x_1), smp.diff(dfdx_2, x_2)]])
-
+    
     iterations = 100
     results = []
     current = np.array([[random.uniform(-10, 10), random.uniform(-10, 10)]])
-
+    
     try:
         if method == 'gradient_descent':
             iteration = 0
@@ -82,31 +94,90 @@ def optimize(method):
                     'gradient_magnitude': Amp_df
                 })
 
-        elif method == 'newton_raphson':
+        elif method == 'steepest_gradient':
             iteration = 0
             Stop = 0.01
+            Amp_df = 0.1
+            η = 0.01  
 
-            while iteration < iterations:
+            while Amp_df > Stop and iteration < iterations:
                 iteration += 1
                 f_Value = float(f.subs({x_1: current[0][0], x_2: current[0][1]}))
 
                 dx_1 = float(dfdx_1.subs({x_1: current[0][0], x_2: current[0][1]}))
                 dx_2 = float(dfdx_2.subs({x_1: current[0][0], x_2: current[0][1]}))
+
                 g_df = np.array([[dx_1], [dx_2]])
+                Amp_df = np.linalg.norm(g_df)
 
-                hessian_eval = hessian.subs({x_1: current[0][0], x_2: current[0][1]})
-                hessian_inv = hessian_eval.inv()
-
-                current = current - hessian_inv @ g_df
+                current = current - (η * g_df.T)
 
                 results.append({
                     'iteration': iteration,
                     'current_point': current.tolist(),
-                    'function_value': f_Value
+                    'function_value': f_Value,
+                    'gradient_magnitude': Amp_df
                 })
 
-                if np.linalg.norm(g_df) < Stop:
-                    break
+        elif method == 'pso':
+            swarm_size = 30
+            inertia = 0.5
+            cognitive_coeff = 1.5
+            social_coeff = 1.5
+            max_iterations = iterations
+
+            particles = np.random.uniform(-10, 10, (swarm_size, 2))
+            velocities = np.random.uniform(-1, 1, (swarm_size, 2))
+            personal_best_positions = particles.copy()
+            personal_best_values = np.full(swarm_size, np.inf)
+
+            for iteration in range(max_iterations):
+                for i in range(swarm_size):
+                    f_Value = float(f.subs({x_1: particles[i][0], x_2: particles[i][1]}))
+
+                    if f_Value < personal_best_values[i]:
+                        personal_best_values[i] = f_Value
+                        personal_best_positions[i] = particles[i]
+
+                for i in range(swarm_size):
+                    r1 = np.random.rand(2)
+                    r2 = np.random.rand(2)
+                    velocities[i] = (inertia * velocities[i] +
+                                     cognitive_coeff * r1 * (personal_best_positions[i] - particles[i]) +
+                                     social_coeff * r2 * (personal_best_positions[np.argmin(personal_best_values)] - particles[i]))
+                    particles[i] += velocities[i]
+
+                best_index = np.argmin(personal_best_values)
+                results.append({
+                    'iteration': iteration,
+                    'best_position': personal_best_positions[best_index].tolist(),
+                    'best_value': personal_best_values[best_index]
+                })
+
+        elif method == 'simulated_annealing':
+            def objective_function(x):
+                return float(f.subs({x_1: x[0], x_2: x[1]}))
+
+            temp = 1000
+            cooling_rate = 0.95
+            current_solution = np.array([random.uniform(-10, 10), random.uniform(-10, 10)])
+            current_value = objective_function(current_solution)
+
+            while temp > 1:
+                new_solution = current_solution + np.random.normal(0, 1, 2)
+                new_value = objective_function(new_solution)
+
+                if new_value < current_value or np.random.rand() < np.exp((current_value - new_value) / temp):
+                    current_solution = new_solution
+                    current_value = new_value
+
+                results.append({
+                    'current_solution': current_solution.tolist(),
+                    'current_value': current_value,
+                    'temperature': temp
+                })
+
+                temp *= cooling_rate
 
         final_value = float(f.subs({x_1: current[0][0], x_2: current[0][1]}))
         final_point = current.tolist()
@@ -114,7 +185,7 @@ def optimize(method):
         results_summary = {
             'final_point': final_point,
             'final_value': final_value,
-            'iterations': iteration,
+            'iterations': len(results),
         }
 
         return jsonify(results_summary)
