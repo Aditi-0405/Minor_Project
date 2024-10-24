@@ -129,11 +129,15 @@ const FunctionsPage = () => {
           <div className={styles.resultDetails}>
             {optimizationResult.final_point && (
               <p>
-                <strong>Final Point:</strong> {optimizationResult.final_point.map((point, index) => (
-                  <span key={index}>{point}{index < optimizationResult.final_point.length - 1 ? ', ' : ''}</span>
+                <strong>Final Point:</strong> {optimizationResult.final_point[0].map((point, index) => (
+                  <span key={index}>
+                    {point}{index < optimizationResult.final_point[0].length - 1 ? ', ' : ''}
+                  </span>
                 ))}
               </p>
             )}
+
+
             {optimizationResult.final_value !== undefined && (
               <p><strong>Final Value:</strong> {optimizationResult.final_value}</p>
             )}
