@@ -37,10 +37,6 @@ def optimize_gradient_descent():
 def optimize_newton_raphson():
     return optimize('newton_raphson')
 
-@app.route("/api/optimize/moop", methods=['POST'])
-def optimize_moop():
-    return optimize_moop()
-
 def optimize(method):
     function_name = request.args.get('function', default='cross_in_tray', type=str)
 
@@ -53,20 +49,18 @@ def optimize(method):
     dfdx_1 = smp.diff(f, x_1)
     dfdx_2 = smp.diff(f, x_2)
 
-    # Hessian calculation for Newton-Raphson
     hessian = smp.Matrix([[smp.diff(dfdx_1, x_1), smp.diff(dfdx_1, x_2)],
                            [smp.diff(dfdx_2, x_1), smp.diff(dfdx_2, x_2)]])
 
     iterations = 100
     results = []
     current = np.array([[random.uniform(-10, 10), random.uniform(-10, 10)]])
-    
+
     try:
         if method == 'gradient_descent':
             iteration = 0
             Stop = 0.01
             Amp_df = 0.1
-            print("Initial Point equal", current)
 
             while Amp_df > Stop and iteration < iterations:
                 iteration += 1
@@ -88,12 +82,9 @@ def optimize(method):
                     'gradient_magnitude': Amp_df
                 })
 
-                print(f"Iteration: {iteration}, Current Point: {current}, Function Value: {f_Value}, Gradient Magnitude: {Amp_df}")
-
         elif method == 'newton_raphson':
             iteration = 0
             Stop = 0.01
-            print("Initial Point equal", current)
 
             while iteration < iterations:
                 iteration += 1
@@ -114,8 +105,6 @@ def optimize(method):
                     'function_value': f_Value
                 })
 
-                print(f"Iteration: {iteration}, Current Point: {current}, Function Value: {f_Value}")
-
                 if np.linalg.norm(g_df) < Stop:
                     break
 
@@ -133,22 +122,39 @@ def optimize(method):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-def optimize_moop():
+@app.route("/api/optimize/moop/zdt1", methods=['POST'])
+def optimize_moop_zdt1():
+    return optimize_moop("zdt1")
 
-    problem = get_problem("zdt1") 
+@app.route("/api/optimize/moop/zdt2", methods=['POST'])
+def optimize_moop_zdt2():
+    return optimize_moop("zdt2")
 
+@app.route("/api/optimize/moop/zdt3", methods=['POST'])
+def optimize_moop_zdt3():
+    return optimize_moop("zdt3")
 
-    algorithm = NSGA2(pop_size=100)
+@app.route("/api/optimize/moop/zdt4", methods=['POST'])
+def optimize_moop_zdt4():
+    return optimize_moop("zdt4")
 
-    res = minimize(problem, algorithm, ('n_gen', 100), verbose=True)
+def optimize_moop(problem_name):
+    try:
+        problem = get_problem(problem_name)
 
+        algorithm = NSGA2(pop_size=100)
 
-    plot(problem.pareto_front(), no_fill=True)
+        res = minimize(problem, algorithm, ('n_gen', 100), verbose=True)
 
-    return jsonify({
-        'pareto_front': res.F.tolist(), 
-        'optimum_points': res.X.tolist()  
-    })
+        plot(problem.pareto_front(), no_fill=True)
+
+        return jsonify({
+            'pareto_front': res.F.tolist(),
+            'optimum_points': res.X.tolist()
+        })
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)

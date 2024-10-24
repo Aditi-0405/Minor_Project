@@ -13,8 +13,9 @@ const FunctionsPage = () => {
   const handleOptimizationTypeSelect = (event) => {
     setOptimizationType(event.target.value);
     setSelectedFunction('');
-    setOptimizationMethod(''); // Reset method selection
+    setOptimizationMethod('');
     setOptimizationResult(null);
+    setError('');
   };
 
   const handleMethodSelect = (event) => {
@@ -41,15 +42,16 @@ const FunctionsPage = () => {
       let endpoint;
 
       if (optimizationType === 'soop') {
-        endpoint = optimizationMethod === 'gradient_descent'
-          ? 'http://127.0.0.1:8080/api/optimize/gradient_descent'
-          : 'http://127.0.0.1:8080/api/optimize/newton_raphson';
+        endpoint =
+          optimizationMethod === 'gradient_descent'
+            ? 'http://127.0.0.1:8080/api/optimize/gradient_descent'
+            : 'http://127.0.0.1:8080/api/optimize/newton_raphson';
       } else if (optimizationType === 'moop') {
-        endpoint = 'http://127.0.0.1:8080/api/optimize/moop'; // Add endpoint for MOOP
+
+        endpoint = `http://127.0.0.1:8080/api/optimize/moop/${selectedFunction}`;
       }
 
-      const res = await axios.post(`${endpoint}?function=${selectedFunction}`);
-      console.log(res.data);
+      const res = await axios.post(endpoint);
       setOptimizationResult(res.data);
     } catch (err) {
       setError('Failed to fetch optimization data');
@@ -86,8 +88,6 @@ const FunctionsPage = () => {
               <select onChange={handleMethodSelect} value={optimizationMethod} className={styles.methodSelect}>
                 <option value="">--Select Optimization Method--</option>
                 <option value="nsga2">NSGA-II</option>
-                <option value="pareto_front">Pareto Front</option>
-                {/* Add more MOOP methods as needed */}
               </select>
             </>
           )}
@@ -109,7 +109,6 @@ const FunctionsPage = () => {
                     <option value="zdt2">ZDT2 Problem</option>
                     <option value="zdt3">ZDT3 Problem</option>
                     <option value="zdt4">ZDT4 Problem</option>
-                    <option value="zdt6">ZDT6 Problem</option>
                   </>
                 )}
               </select>
@@ -141,11 +140,12 @@ const FunctionsPage = () => {
             {optimizationResult.iterations && (
               <p><strong>Iterations:</strong> {optimizationResult.iterations}</p>
             )}
-            {/* You might want to add more checks for the pareto_front if you want to display it */}
+            {optimizationResult.pareto_front && (
+              <p><strong>Pareto Front:</strong> {JSON.stringify(optimizationResult.pareto_front)}</p>
+            )}
           </div>
         </div>
       )}
-
     </div>
   );
 };
