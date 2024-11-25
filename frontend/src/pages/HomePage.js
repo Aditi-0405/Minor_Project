@@ -1,4 +1,4 @@
-import React , {useState , useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../styles/HomePage.module.css';
 import axios from "axios"
@@ -19,10 +19,18 @@ const HomePage = () => {
 
   return (
     <div className={styles.homeContainer}>
+      <div className={styles.tabsContainer}>
+        <Link to="/soop" className={styles.tab}>
+          Learn about SOOP
+        </Link>
+        <Link to="/moop" className={styles.tab}>
+          Learn about MOOP
+        </Link>
+      </div>
       <h1 className={styles.title}>Welcome to the Optimization Learning Platform</h1>
       <p className={styles.intro}>
-        Optimization is a fundamental area of mathematics and engineering that involves identifying the best possible solution 
-        to a problem within a set of defined constraints. This platform is designed to make learning about optimization more 
+        Optimization is a fundamental area of mathematics and engineering that involves identifying the best possible solution
+        to a problem within a set of defined constraints. This platform is designed to make learning about optimization more
         approachable and engaging.
       </p>
 
@@ -31,11 +39,11 @@ const HomePage = () => {
           <h2 className={styles.featureTitle}>What You'll Learn</h2>
           <p className={styles.featureDescription}>
             Our platform provides a comprehensive introduction to both Single Objective and Multi-Objective Optimization Problems.
-            You'll gain insights into key concepts, standard test functions, and prominent optimization algorithms. The interactive 
+            You'll gain insights into key concepts, standard test functions, and prominent optimization algorithms. The interactive
             page will allow you to experiment with different functions and optimization techniques to see practical results.
           </p>
         </div>
-        
+
         <div className={styles.feature}>
           <h2 className={styles.featureTitle}>Key Concepts</h2>
           <p className={styles.featureDescription}>
@@ -48,14 +56,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className={styles.tabsContainer}>
-        <Link to="/soop" className={styles.tab}>
-          Learn about SOOP
-        </Link>
-        <Link to="/moop" className={styles.tab}>
-          Learn about MOOP
-        </Link>
-      </div>
     </div>
   );
 };
