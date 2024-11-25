@@ -49,6 +49,71 @@ def optimize_simulated_annealing():
 def optimize_newton_raphson():
     return optimize('newton_raphson')
 
+def parse_user_function(function_str):
+    try:
+        x_1, x_2 = smp.symbols('x_1 x_2')
+        user_function = smp.sympify(function_str)
+        return user_function, x_1, x_2
+    except Exception as e:
+        raise ValueError(f"Error parsing function: {str(e)}")
+
+@app.route("/api/optimize/custom_function", methods=['POST'])
+def optimize_custom_function():
+    try:
+        data = request.get_json()
+        function_str = data.get('function', None)
+
+        if not function_str:
+            return jsonify({'error': 'Function string is required'}), 400
+
+        f, x_1, x_2 = parse_user_function(function_str)
+        dfdx_1 = smp.diff(f, x_1)
+        dfdx_2 = smp.diff(f, x_2)
+
+        iterations = 100
+        results = []
+        current = np.array([[random.uniform(-10, 10), random.uniform(-10, 10)]])
+
+        iteration = 0
+        Stop = 0.01
+        Amp_df = 0.1
+        η = 0.01
+
+        while Amp_df > Stop and iteration < iterations:
+            iteration += 1
+            f_Value = float(f.subs({x_1: current[0][0], x_2: current[0][1]}))
+
+            dx_1 = float(dfdx_1.subs({x_1: current[0][0], x_2: current[0][1]}))
+            dx_2 = float(dfdx_2.subs({x_1: current[0][0], x_2: current[0][1]}))
+
+            g_df = np.array([[dx_1], [dx_2]])
+            Amp_df = np.linalg.norm(g_df)
+
+            current = current - (η * g_df.T)
+
+            results.append({
+                'iteration': iteration,
+                'current_point': current.tolist(),
+                'function_value': f_Value,
+                'gradient_magnitude': Amp_df
+            })
+
+        final_value = float(f.subs({x_1: current[0][0], x_2: current[0][1]}))
+        final_point = current.tolist()
+
+        results_summary = {
+            'final_point': final_point,
+            'final_value': final_value,
+            'iterations': len(results),
+        }
+
+        return jsonify(results_summary)
+
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 def optimize(method):
     function_name = request.args.get('function', default='cross_in_tray', type=str)
 
