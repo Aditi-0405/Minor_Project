@@ -50,11 +50,6 @@ const algorithmsSOOP = [
       6. Generate New Population
       7. Check Stopping Criteria
 
-      ![Flowchart Placeholder](https://via.placeholder.com/600x400?text=GA+Flowchart)
-
-      Graphical Representation:
-      Below is an example of how solutions improve over generations:
-      ![Graph Placeholder](https://via.placeholder.com/600x300?text=Fitness+Over+Generations)
 
       Challenges:
       - Premature Convergence: The population may converge to a local optimum too quickly.
@@ -131,11 +126,6 @@ const algorithmsSOOP = [
       6. Reduce the temperature based on the cooling schedule.
       7. Check stopping criteria (temperature or iteration limit).
 
-      ![Flowchart Placeholder](https://via.placeholder.com/600x400?text=SA+Flowchart)
-
-      Graphical Representation:
-      A graph showing how the temperature decreases over iterations and how the solution quality improves:
-      ![Graph Placeholder](https://via.placeholder.com/600x300?text=Temperature+and+Fitness+Over+Iterations)
 
       Challenges:
       - Parameter Tuning: The cooling schedule and initial temperature must be carefully chosen.
@@ -208,8 +198,7 @@ const algorithmsSOOP = [
       4. Check if the stopping criterion is met.
       5. If not, set \\( x_n = x_{n+1} \\) and repeat.
 
-      ![Flowchart Placeholder](https://via.placeholder.com/600x400?text=Newton-Raphson+Flowchart)
-
+      
       Challenges:
       - Initial Guess Sensitivity: Poor guesses may lead to divergence or slow convergence.
       - Singular Derivative: If \\( f'(x) \\) is zero or near zero, the method fails.
@@ -294,7 +283,6 @@ const algorithmsSOOP = [
       4. Check for convergence.
       5. If not converged, return to step 2.
 
-      ![Flowchart Placeholder](https://via.placeholder.com/600x400?text=Gradient+Descent+Flowchart)
 
       Challenges:
       - Learning Rate: Too large may lead to divergence; too small results in slow convergence.
@@ -390,7 +378,6 @@ const algorithmsSOOP = [
       Visualization:
       A typical progression of the algorithm shows the parameter values moving along the steepest descent path toward the function's minimum.
 
-      ![Visualization Placeholder](https://via.placeholder.com/600x400?text=Steepest+Descent+Path)
 
       Flowchart:
       1. Compute Gradient \\( \\nabla f(x_k) \\).
@@ -399,7 +386,6 @@ const algorithmsSOOP = [
       4. Check Convergence.
       5. Repeat until stopping criteria are met.
 
-      ![Flowchart Placeholder](https://via.placeholder.com/600x400?text=Steepest+Gradient+Descent+Flowchart)
     `,
     pseudoCode: `1. Initialize parameters \\( x_0 \\), tolerance \\( \\epsilon \\), and maximum iterations.
 2. Repeat until convergence:
@@ -481,20 +467,8 @@ const algorithmsMOOP = [
       - Parallel NSGA-II: Parallelized versions of NSGA-II for handling larger problems more efficiently.
       - Hybrid NSGA-II: Combining NSGA-II with other optimization methods like local search or surrogate models for improved performance.
 
-      Flowchart:
-      1. Initialize Population
-      2. Non-dominated Sorting and Crowding Distance Calculation
-      3. Apply Selection (based on rank and distance)
-      4. Perform Crossover and Mutation
-      5. Merge Parents and Offspring, Select New Population
-      6. Repeat until stopping criteria are met
 
-      ![Flowchart Placeholder](https://via.placeholder.com/600x400?text=NSGA-II+Flowchart)
 
-      Visualization:
-      Below is a representation of how the population evolves over generations in terms of approximating the Pareto front:
-
-      ![Visualization Placeholder](https://via.placeholder.com/600x300?text=Pareto+Front+Evolution)
 
     `,
     pseudoCode: `1. Initialize population with random solutions.
@@ -561,21 +535,6 @@ const algorithmsMOOP = [
       - Parallel SPEA2: Parallel versions of SPEA2 have been proposed to handle larger problem instances more efficiently by distributing the computational load across multiple processors.
       - Hybrid SPEA2: Combining SPEA2 with local search algorithms or other metaheuristic methods to improve the quality of the Pareto front approximation.
       - SPEA2+: An extension that incorporates elitism (preserving the best solutions) to improve the convergence of the algorithm.
-
-      Flowchart:
-      1. Initialize Population
-      2. Calculate Fitness for Each Solution
-      3. Select Solutions for Crossover and Mutation
-      4. Perform Crossover and Mutation
-      5. Perform Environmental Selection
-      6. Repeat until stopping criteria are met
-
-      ![Flowchart Placeholder](https://via.placeholder.com/600x400?text=SPEA2+Flowchart)
-
-      Visualization:
-      Below is a graphical representation of how SPEA2 approximates the Pareto front over multiple generations:
-
-      ![Visualization Placeholder](https://via.placeholder.com/600x300?text=Pareto+Front+Evolution+in+SPEA2)
 
     `,
     pseudoCode: `1. Initialize a population with random solutions.
@@ -646,19 +605,6 @@ const algorithmsMOOP = [
       - Parallel MOEA/D: Implementing the algorithm in parallel environments to improve efficiency, especially for problems with a large number of subproblems or objectives.
       - Hybrid MOEA/D: Combining MOEA/D with other optimization techniques (such as local search methods or other evolutionary algorithms) to enhance performance.
 
-      Flowchart:
-      1. Decompose the multi-objective problem into scalarized subproblems.
-      2. Initialize the population for each subproblem.
-      3. Perform evolutionary operations (crossover and mutation) on each subproblem.
-      4. Update the population based on the solutions to the subproblems.
-      5. Repeat until convergence or stopping criteria are met.
-
-      ![Flowchart Placeholder](https://via.placeholder.com/600x400?text=MOEA/D+Flowchart)
-
-      Visualization:
-      Below is a graphical representation of how MOEA/D approximates the Pareto front over multiple generations:
-
-      ![Visualization Placeholder](https://via.placeholder.com/600x300?text=Pareto+Front+Evolution+in+MOEA/D)
 
     `,
     pseudoCode: `1. Decompose the multi-objective problem into scalarized subproblems.
@@ -698,6 +644,7 @@ const AlgorithmsPage = () => {
             <p className={styles.description}>{algo.description}</p>
             <p className={styles.theory}>{algo.theory}</p>
             <pre className={styles.pseudoCode}>
+              <h1>Pseudo Code</h1>
               <code>{algo.pseudoCode}</code>
             </pre>
           </div>
