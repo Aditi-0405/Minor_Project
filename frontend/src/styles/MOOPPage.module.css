@@ -1,67 +1,126 @@
 .container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    background-color: #f9f9f9;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.heading {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.description {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.imageContainer {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.imageCaption {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.subHeading {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #444;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.keyConcepts {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.keyConcepts li {
+  background: #e9f5ff;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-left: 4px solid #007bff;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.example {
+  margin: 30px 0;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.exampleTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 15px;
+}
+
+.exampleDescription {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.detailHeading {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #444;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+ul {
+  margin: 10px 0;
+  padding: 0;
+  list-style: disc inside;
+}
+
+ul li {
+  margin: 5px 0;
+  color: #555;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
   }
-  
+
   .heading {
-    font-size: 2.5rem;
-    color: #333;
-    text-align: center;
-    margin-bottom: 30px;
-    font-weight: bold;
+    font-size: 2rem;
   }
-  
-  .description {
-    font-size: 1.2rem;
-    color: #555;
-    line-height: 1.6;
-    margin-bottom: 30px;
-  }
-  
+
   .subHeading {
-    font-size: 1.8rem;
-    color: #007bff;
-    margin-bottom: 20px;
-    font-weight: bold;
-  }
-  
-  .keyConcepts {
-    list-style-type: disc;
-    margin-left: 20px;
-    margin-bottom: 30px;
-  }
-  
-  .keyConcepts li {
-    font-size: 1.1rem;
-    color: #333;
-    margin-bottom: 10px;
-  }
-  
-  .examples {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .example {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-  }
-  
-  .exampleTitle {
     font-size: 1.5rem;
-    color: #007bff;
-    margin-bottom: 10px;
-    font-weight: bold;
   }
-  
-  .exampleDescription {
-    font-size: 1.1rem;
-    color: #555;
-    line-height: 1.6;
+
+  .example {
+    padding: 15px;
   }
-  
+}

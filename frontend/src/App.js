@@ -7,6 +7,7 @@ import MOOPPage from './pages/MOOPPage';
 import FunctionsPage from './pages/FunctionsPage';
 import CustomFunctionsPage from './pages/CustomFunctionPage';
 import AlgorithmsPage from './pages/AlgorithmsPage';
+import ResourcesPage from './pages/ResourcePage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/functions" element={<FunctionsPage />} />
         <Route path="/functions/custom" element={<CustomFunctionsPage />} />
         <Route path="/algorithms" element={<AlgorithmsPage />} />
+        <Route path="/resources" element={<ResourcesPage />} />
       </Routes>
     </Router>
   );
