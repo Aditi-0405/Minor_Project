@@ -2,10 +2,9 @@ import React from 'react';
 import styles from '../styles/MOOPPage.module.css';
 import img1 from '../images/moop_procedure.png';
 import img2 from '../images/pareto2.png';
-import img3 from '../images/pareto1.png';
-import img4 from '../images/pareto4.png';
 import img5 from '../images/pareto5.jpg';
 import img6 from '../images/pareto6.png';
+import img7 from '../images/weighted_sum.png'; // Placeholder for the Weighted Sum Approach image
 
 const MOOPPage = () => {
   return (
@@ -18,33 +17,24 @@ const MOOPPage = () => {
         Pareto front, where no solution is better in all objectives compared to another.
       </p>
       <div className={styles.imageContainer}>
-        <img
-          src={img1} alt=""
-          className={styles.image}
-        />
-        <p className={styles.imageCaption}>Schematic of an Ideal multi-objective optimization procedure</p>
+        <img src={img1} alt="MOOP Procedure" className={styles.image} />
+        <p className={styles.imageCaption}>Schematic of an ideal multi-objective optimization procedure</p>
       </div>
 
       <h2 className={styles.subHeading}>What is the Pareto Front?</h2>
       <p className={styles.description}>
-        The Pareto front is a concept central to MOOP. It represents the set of solutions where no single objective can be improved
-        without degrading another. A solution is said to be <strong>non-dominated</strong> if no other solution is better in all objectives.
+        The Pareto front, named after the economist Vilfredo Pareto, is a fundamental concept in multi-objective optimization,
+        representing a curve (or surface in higher dimensions) of optimal trade-offs between conflicting objectives.
+        Each point on the Pareto front is considered Pareto efficient or non-dominated, meaning that no improvement
+        in one objective can be achieved without sacrificing at least one other objective. This concept provides decision-makers
+        with a spectrum of equally optimal solutions, rather than a single "best" answer, emphasizing the inherent trade-offs
+        in real-world scenarios.
       </p>
       <div className={styles.paretoSection}>
         <div className={styles.imageContainer}>
-          <img
-            src={img2} alt=""
-            className={styles.image}
-          />
+          <img src={img2} alt="Pareto Front Visualization" className={styles.image} />
           <p className={styles.imageCaption}>Visualization of the Pareto front in a two-objective optimization problem.</p>
         </div>
-        <div className={styles.imageContainer}>
-        <img
-          src={img1} alt=""
-          className={styles.image}
-        />
-        <p className={styles.imageCaption}>Schematic of an Ideal multi-objective optimization procedure</p>
-      </div>
         <p className={styles.description}>
           For example, consider optimizing cost and quality:
           <ul>
@@ -54,6 +44,30 @@ const MOOPPage = () => {
           Both solutions are valid and non-dominated because improving one objective (e.g., reducing cost) would worsen the other (e.g., reducing quality).
         </p>
       </div>
+
+      <h2 className={styles.subHeading}>Weighted Sum Approach</h2>
+      <p className={styles.description}>
+        The Weighted Sum Approach is a common method used to solve multi-objective optimization problems by converting multiple
+        objectives into a single objective. This is achieved by assigning a weight to each objective, representing its relative
+        importance, and summing them up. The resulting objective function is:
+      </p>
+      <div className={styles.formula}>
+        <p className={styles.formulaText}>
+          Objective Function = w<sub>1</sub> * f<sub>1</sub>(x) + w<sub>2</sub> * f<sub>2</sub>(x) + ... + w<sub>n</sub> * f<sub>n</sub>(x)
+        </p>
+      </div>
+      <p className={styles.description}>
+        Where w<sub>i</sub> represents the weight for objective f<sub>i</sub>(x). By varying the weights, different trade-offs
+        can be explored, and points along the Pareto front can be identified.
+      </p>
+      <div className={styles.imageContainer}>
+        <img src={img7} alt="Weighted Sum Approach" className={styles.image} />
+        <p className={styles.imageCaption}>Illustration of the Weighted Sum Approach in a two-objective optimization problem</p>
+      </div>
+      <p className={styles.description}>
+        This method is simple and intuitive but may not capture all solutions on the Pareto front, particularly in problems with
+        non-convex Pareto fronts. Nevertheless, it is widely used due to its computational efficiency and ease of implementation.
+      </p>
 
       <h2 className={styles.subHeading}>Key Concepts</h2>
       <ul className={styles.keyConcepts}>
@@ -73,10 +87,7 @@ const MOOPPage = () => {
           leading to solutions on the Pareto front.
         </p>
         <div className={styles.imageContainer}>
-          <img
-            src={img5} alt=""
-            className={styles.image}
-          />
+          <img src={img5} alt="Pareto Front Example" className={styles.image} />
           <p className={styles.imageCaption}>Pareto front for speed and quality trade-off</p>
         </div>
         <h4 className={styles.detailHeading}>Logic</h4>
@@ -97,14 +108,12 @@ const MOOPPage = () => {
       <div className={styles.example}>
         <h3 className={styles.exampleTitle}>Efficiency and Pareto Optimality</h3>
         <p className={styles.exampleDescription}>
-        Efficiency in the context of optimization refers to achieving the best possible outcome while minimizing resource usage. It is a measure of how effectively an objective (such as cost, time, energy, or effort) is utilized to achieve desired results. 
-        In multi-objective optimization, efficiency often involves balancing competing objectives to maximize benefits across all criteria.
+          Efficiency in the context of optimization refers to achieving the best possible outcome while minimizing resource usage.
+          It is a measure of how effectively an objective (such as cost, time, energy, or effort) is utilized to achieve desired results.
+          In multi-objective optimization, efficiency often involves balancing competing objectives to maximize benefits across all criteria.
         </p>
         <div className={styles.imageContainer}>
-          <img
-            src={img6} alt=""
-            className={styles.image}
-          />
+          <img src={img6} alt="Pareto Efficiency" className={styles.image} />
           <p className={styles.imageCaption}>Pareto Efficiency and Optimality</p>
         </div>
         <h4 className={styles.detailHeading}>Applications</h4>
